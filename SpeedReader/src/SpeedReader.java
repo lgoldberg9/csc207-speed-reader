@@ -4,6 +4,21 @@ import java.io.IOException;
 public class SpeedReader {
 
 	public static int sleepDelay = 0;
+	
+	public static int getFocusIndex(int length) {
+		switch (length) {
+			case 0: case 1:
+				return 0;
+			case 2: case 3: case 4: case 5:
+				return 1;
+			case 6: case 7: case 8: case 9:
+				return 2;
+			case 10: case 11: case 12: case 13:
+				return 3;
+			default:
+				return 4; // return 5 if the length is 14 or greater 
+		}
+	}
 
 	public static void main(String[] args) throws IOException, 
 	InterruptedException {
@@ -39,17 +54,32 @@ public class SpeedReader {
 		
 		while (speedReader.hasNext()) {
 			
-			String word = speedReader.next(); 
+			String word = speedReader.next();
+			
+			int focusIndex = getFocusIndex(word.length());
+			String leftHalf = word.substring(0, focusIndex);
+			String focusLetter = word.substring(focusIndex, focusIndex + 1);
+			String rightHalf = word.substring(focusIndex + 1);
 			
 			// Calculate where the word should be to center it
-			int fontWidth = metrics.stringWidth(word);
-			int xPos = (width / 2) - (fontWidth / 2);
+			int leftWidth = metrics.stringWidth(leftHalf);
+			int rightWidth = metrics.stringWidth(rightHalf);
+			int centerWidth = metrics.stringWidth(focusLetter);
+			int xPos = (width / 2) - (centerWidth / 2);
 			int yPos = (height / 2) - (fontHeight / 2);
 			
 			panelGraphics.setColor(Color.WHITE);
 			panelGraphics.fillRect(0, 0, width + 1, height + 1); // clear the previous word
+			
+			// draw left half and right half black
 			panelGraphics.setColor(Color.BLACK);
-			panelGraphics.drawString(word, xPos, yPos); // draw a word
+			panelGraphics.drawString(leftHalf, xPos - leftWidth, yPos); 
+			panelGraphics.drawString(rightHalf, xPos + centerWidth, yPos); 
+			
+			// draw center as red
+			panelGraphics.setColor(Color.RED);
+			panelGraphics.drawString(focusLetter, xPos, yPos); 
+			
 			Thread.sleep(sleepDelay);
 		}
 		
