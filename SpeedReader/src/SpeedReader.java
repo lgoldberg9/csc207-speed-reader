@@ -30,16 +30,26 @@ public class SpeedReader {
 		DrawingPanel panel = new DrawingPanel(width, height);
 		Graphics panelGraphics = panel.getGraphics();
 		Font panelFont = new Font("Courier", Font.BOLD, fontSize);
+		FontMetrics metrics = panelGraphics.getFontMetrics(panelFont);
+		int fontHeight = metrics.getHeight();
 		
 		panelGraphics.setFont(panelFont);
 		
 		Thread.sleep(sleepDelay);
 		
 		while (speedReader.hasNext()) {
+			
+			String word = speedReader.next(); 
+			
+			// Calculate where the word should be to center it
+			int fontWidth = metrics.stringWidth(word);
+			int xPos = (width / 2) - (fontWidth / 2);
+			int yPos = (height / 2) - (fontHeight / 2);
+			
 			panelGraphics.setColor(Color.WHITE);
 			panelGraphics.fillRect(0, 0, width + 1, height + 1); // clear the previous word
 			panelGraphics.setColor(Color.BLACK);
-			panelGraphics.drawString(speedReader.next(), 100, 100); // draw a word
+			panelGraphics.drawString(word, xPos, yPos); // draw a word
 			Thread.sleep(sleepDelay);
 		}
 		
