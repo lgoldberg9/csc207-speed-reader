@@ -3,6 +3,8 @@ import java.io.IOException;
 
 public class SpeedReader {
 
+	public static int sleepDelay = 0;
+
 	public static void main(String[] args) throws IOException, 
 	InterruptedException {
 		
@@ -18,6 +20,8 @@ public class SpeedReader {
 		int fontSize = Integer.parseInt(args[3]);
 		int wpm = Integer.parseInt(args[4]);
 		
+		sleepDelay = 60000 / wpm; // (60s * 1000 s/ms) / wpm = delay between words
+		
 		// This calls the WordGenerator class with all its methods. 
 		// The scanner is built into it so we don't lose track of the file pointer.
 		WordGenerator speedReader = new WordGenerator(filename);
@@ -26,10 +30,17 @@ public class SpeedReader {
 		DrawingPanel panel = new DrawingPanel(width, height);
 		Graphics panelGraphics = panel.getGraphics();
 		Font panelFont = new Font("Courier", Font.BOLD, fontSize);
+		
 		panelGraphics.setFont(panelFont);
+		
+		Thread.sleep(sleepDelay);
+		
 		while (speedReader.hasNext()) {
-			panelGraphics.drawString(speedReader.next(), 100, 100);
-			Thread.sleep(1000 / wpm); // I'm not sure what the wpm rate should be.
+			panelGraphics.setColor(Color.WHITE);
+			panelGraphics.fillRect(0, 0, width + 1, height + 1); // clear the previous word
+			panelGraphics.setColor(Color.BLACK);
+			panelGraphics.drawString(speedReader.next(), 100, 100); // draw a word
+			Thread.sleep(sleepDelay);
 		}
 		
 		
