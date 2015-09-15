@@ -3,13 +3,13 @@ import java.io.IOException;
 
 public class SpeedReader {
 
-	public static int main(String[] args) throws IOException, 
+	public static void main(String[] args) throws IOException, 
 	InterruptedException {
 		
 		if (args.length != 5) {
 			System.out.println("Invalid usage. Usage: SpeedReader "
 					+ "<filename> <width> <height> <font size> <wpm>");
-			return 1;
+			return;
 		}
 		
 		String filename = args[0];
@@ -33,7 +33,7 @@ public class SpeedReader {
 		}
 		
 		
-		return 0;
+		return;
 	}
 	
 }
